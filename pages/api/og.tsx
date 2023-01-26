@@ -8,7 +8,9 @@ export const config = {
   export default function (req: NextRequest) {
     try {
       const { searchParams } = new URL(req.url);
-  
+      const testUrl = new URL(req.url)
+      console.log(testUrl)
+      console.log('REQ',req.url)
       // ?title=<title>
       const hasTitle = searchParams.has('title');
       const title = hasTitle

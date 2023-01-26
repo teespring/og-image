@@ -1,6 +1,39 @@
 {
   "sortedMiddleware": [],
   "middleware": {},
-  "functions": {},
+  "functions": {
+    "/api/og": {
+      "env": [
+        "JEST_WORKER_ID"
+      ],
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/og.js"
+      ],
+      "name": "pages/api/og",
+      "page": "/api/og",
+      "matchers": [
+        {
+          "regexp": "^/api/og$"
+        }
+      ],
+      "wasm": [
+        {
+          "name": "wasm_53adb396180a95eb122a0218c93e3d6474b1a27e",
+          "filePath": "server/edge-chunks/wasm_53adb396180a95eb122a0218c93e3d6474b1a27e.wasm"
+        },
+        {
+          "name": "wasm_ea9ee43a5ee9b2e1cd270fa43980822c06dc5bf2",
+          "filePath": "server/edge-chunks/wasm_ea9ee43a5ee9b2e1cd270fa43980822c06dc5bf2.wasm"
+        }
+      ],
+      "assets": [
+        {
+          "name": "noto-sans-v27-latin-regular.5dda3fca77107598.ttf",
+          "filePath": "server/edge-chunks/asset_noto-sans-v27-latin-regular.5dda3fca77107598.ttf"
+        }
+      ]
+    }
+  },
   "version": 2
 }
