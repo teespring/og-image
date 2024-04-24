@@ -182,6 +182,9 @@ export default function (req: NextRequest) {
       {
         width: 1200,
         height: 630,
+        headers: {
+          'netlify-vary': 'query'
+        }
       }
     );
   } catch (e: any) {
