@@ -2,38 +2,28 @@ import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import PoweredByAmaze from '../../components/PoweredByAmaze';
 
-function lightOrDark(color: any) {
-  // Variables for red, green, blue values
+function lightOrDark(color: string) {
   var r, g, b, hsp;
 
   // Check the format of the color, HEX or RGB?
   if (color.match(/^rgb/)) {
     // If RGB --> store the red, green, blue values in separate variables
-    color = color.match(
-      /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
-    );
-
-    r = color[1];
-    g = color[2];
-    b = color[3];
+    const match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    if (!match) return 'light'; // Default to light if parsing fails
+    r = parseInt(match[1], 10);
+    g = parseInt(match[2], 10);
+    b = parseInt(match[3], 10);
   } else {
-    // If hex --> Convert it to RGB: http://gist.github.com/983661
-    color = +('0x' + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
-
-    r = color >> 16;
-    g = (color >> 8) & 255;
-    b = color & 255;
+    // If hex --> Convert it to RGB
+    const hex = +('0x' + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
+    r = hex >> 16;
+    g = (hex >> 8) & 255;
+    b = hex & 255;
   }
 
-  // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+  // HSP equation to determine if the color is light or dark
   hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-  // Using the HSP value, determine whether the color is light or dark
-  if (hsp > 127.5) {
-    return 'light';
-  } else {
-    return 'dark';
-  }
+  return hsp > 127.5 ? 'light' : 'dark';
 }
 
 export const config = {
@@ -43,9 +33,20 @@ export const config = {
 export default function (req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+
+    // Defaults if no query parameters are provided
+    const defaultColor = '#FFFFFF'; // White text
+    const defaultBackgroundColor = '#000000'; // Black background
+
     const title = searchParams.get('title')?.slice(0, 100) || 'My Store';
-    const color = searchParams.get('color') || '000000';
-    const backgroundColor = searchParams.get('backgroundColor') || (lightOrDark(`#${color}`) === 'light' ? '000000' : 'FFFFFF');
+
+    // Get the color from the search params or use a default
+    const color = searchParams.get('color') || defaultColor;
+
+    // Determine the background color: If not set, compute based on the text color
+    const backgroundColor = searchParams.get('backgroundColor') ||
+      (lightOrDark(`#${color}`) === 'light' ? defaultColor : defaultBackgroundColor);
+
     const logoSrc = searchParams.get('logo');
 
     return new ImageResponse(
@@ -76,7 +77,7 @@ export default function (req: NextRequest) {
             >
               <img
                 alt={title}
-                src={logoSrc}
+                src={logoSrc!}
                 style={{ margin: '0 30px', width: '100%', maxWidth: '300px' }}
               />
             </div>
