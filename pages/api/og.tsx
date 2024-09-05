@@ -45,14 +45,14 @@ export default function (req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const title = searchParams.get('title')?.slice(0, 100) || 'My Store';
     const color = searchParams.get('color') || '000000';
-    const foreground = searchParams.get('backgroundColor') || (lightOrDark(`#${color}`) === 'light' ? '000000' : 'FFFFFF');
+    const backgroundColor = searchParams.get('backgroundColor') || (lightOrDark(`#${color}`) === 'light' ? '000000' : 'FFFFFF');
     const logoSrc = searchParams.get('logo');
 
     return new ImageResponse(
       (
         <div
           style={{
-            backgroundColor: foreground,
+            backgroundColor: backgroundColor,
             backgroundSize: '150px 150px',
             height: '100%',
             width: '100%',
