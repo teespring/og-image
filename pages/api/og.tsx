@@ -35,17 +35,17 @@ export default function (req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     // Defaults if no query parameters are provided
-    const defaultColor = '#FFFFFF'; // White text
-    const defaultBackgroundColor = '#000000'; // Black background
+    const defaultForeColor = '#FFFFFF';
+    const defaultColor = '#000000';
 
     const title = searchParams.get('title')?.slice(0, 100) || 'My Store';
 
-    // Get the color from the search params or use a default
-    const color = searchParams.get('color') || defaultColor;
+    // Get the foreground from the search params or use a default
+    const foreground = searchParams.get('foreground') || defaultForeColor;
 
     // Determine the background color: If not set, compute based on the text color
-    const backgroundColor = searchParams.get('backgroundColor') ||
-      (lightOrDark(`#${color}`) === 'light' ? defaultColor : defaultBackgroundColor);
+    const color = searchParams.get('color') ||
+      (lightOrDark(`#${foreground}`) === 'light' ? defaultForeColor : defaultColor);
 
     const logoSrc = searchParams.get('logo');
 
@@ -53,7 +53,7 @@ export default function (req: NextRequest) {
       (
         <div
           style={{
-            backgroundColor: backgroundColor,
+            backgroundColor: color,
             backgroundSize: '150px 150px',
             height: '100%',
             width: '100%',
@@ -87,7 +87,7 @@ export default function (req: NextRequest) {
                 fontSize: 60,
                 fontStyle: 'normal',
                 letterSpacing: '-0.025em',
-                color: color,
+                color: foreground,
                 padding: '0 120px',
                 lineHeight: 1.4,
                 whiteSpace: 'pre-wrap',
@@ -96,7 +96,7 @@ export default function (req: NextRequest) {
               {title}
             </div>
           )}
-          <PoweredByAmaze textColor={color} />
+          <PoweredByAmaze textColor={foreground} />
         </div>
       ),
       {
