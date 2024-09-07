@@ -34,18 +34,20 @@ export default function (req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
-    // Defaults if no query parameters are provided
+    // Helper to ensure color has a '#' prefix
+    const prependHash = (color: string) => (color.startsWith('#') ? color : `#${color}`);
     const defaultForeColor = '#FFFFFF';
     const defaultColor = '#000000';
 
     const title = searchParams.get('title')?.slice(0, 100) || 'My Store';
 
     // Get the foreground from the search params or use a default
-    const foreground = searchParams.get('foreground') || defaultForeColor;
+    const foreground = prependHash(searchParams.get('foreground') || defaultForeColor);
 
     // Determine the background color: If not set, compute based on the text color
-    const color = searchParams.get('color') ||
-      (lightOrDark(`#${foreground}`) === 'light' ? defaultForeColor : defaultColor);
+    let color = prependHash(searchParams.get('color') ||
+      (lightOrDark(`#${foreground}`) === 'light' ? defaultForeColor : defaultColor)
+    );
 
     const logoSrc = searchParams.get('logo');
 
@@ -103,8 +105,8 @@ export default function (req: NextRequest) {
         width: 1200,
         height: 630,
         headers: {
-          'netlify-vary': 'query'
-        }
+          'netlify-vary': 'query',
+        },
       }
     );
   } catch (e: any) {
