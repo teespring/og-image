@@ -15,10 +15,16 @@ function lightOrDark(color: string) {
     b = parseInt(match[3], 10);
   } else {
     // If hex --> Convert it to RGB
-    const hex = +('0x' + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
-    r = hex >> 16;
-    g = (hex >> 8) & 255;
-    b = hex & 255;
+    let hex = color;
+    if (color.length < 5) {
+      hex = color.slice(1).replace(/./g, '$&$&');
+    } else {
+      hex = color.slice(1);
+    }
+    const numericHex = +('0x' + hex);
+    r = numericHex >> 16;
+    g = (numericHex >> 8) & 255;
+    b = numericHex & 255;
   }
 
   // HSP equation to determine if the color is light or dark
@@ -45,8 +51,8 @@ export default function (req: NextRequest) {
     const foreground = prependHash(searchParams.get('foreground') || defaultForeColor);
 
     // Determine the background color: If not set, compute based on the text color
-    let color = prependHash(searchParams.get('color') ||
-      (lightOrDark(`#${foreground}`) === 'light' ? defaultForeColor : defaultColor)
+    let color = prependHash(
+      searchParams.get('color') || (lightOrDark(`#${foreground}`) === 'light' ? defaultForeColor : defaultColor)
     );
 
     const logoSrc = searchParams.get('logo');
