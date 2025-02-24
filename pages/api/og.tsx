@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import PoweredByAmaze from '../../components/PoweredByAmaze';
@@ -36,7 +37,7 @@ export const config = {
   runtime: 'edge',
 };
 
-export default function (req: NextRequest) {
+export default function og(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
@@ -83,11 +84,7 @@ export default function (req: NextRequest) {
                 padding: '0 120px',
               }}
             >
-              <img
-                alt={title}
-                src={logoSrc!}
-                style={{ margin: '0 30px', width: '100%', maxWidth: '300px' }}
-              />
+              <img alt={title} src={logoSrc!} style={{ margin: '0 30px', width: '100%', maxWidth: '300px' }} />
             </div>
           ) : (
             <div

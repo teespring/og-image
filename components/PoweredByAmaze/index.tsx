@@ -1,13 +1,11 @@
 import React from 'react';
 import SpringByAmaze from '../Icons/SpringByAmazeLogo';
 
-
 export type Props = {
   textColor: string;
 };
 
 const PoweredByAmaze: React.FC<Props> = ({ textColor }) => {
-
   return (
     <div
       style={{
